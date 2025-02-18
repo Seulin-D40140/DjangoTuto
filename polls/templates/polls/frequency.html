@@ -1,0 +1,9 @@
+<h1>frequency</h1>
+
+<h3>{{ Question.question_text }}</h3>
+
+<ul>
+    {% for get in Question.get_choices %}
+        <li>reponse : {{ get.0 }} /\ nombre de fois repondu : {{ get.1 }} /\ pourcentage ? : {{ get.2 }}</li>
+    {% endfor %}
+</ul>

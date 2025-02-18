@@ -1,0 +1,27 @@
+{% load static %}
+
+{% if Question %}
+<h2>Liste des sondages</h2>
+<ul>
+    {% for question in Question %}
+        <li>
+            {{ question }}
+        </li>
+    {% endfor %}
+</ul>
+
+<h2>choix possibles pour toutes les questions au total  :</h2>
+<ul>
+    <li><p>{{ total_choices }} choix sont possible toutes questions reunie</p></li>
+</ul>
+
+<h2>nombre total de votes  :</h2>
+<ul>
+    <li><p>{{ total_votes }} votes on etait effectuer </p></li>
+</ul>
+
+{% else %}
+    <p>No polls are available.</p>
+{% endif %}
+
+<link rel="stylesheet" href="{% static 'polls/stats.css' %}">

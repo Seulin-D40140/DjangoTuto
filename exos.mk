@@ -348,4 +348,24 @@ True
 
 In [25]:
 
+TEST EN CONSOLE METHODE DE L'EXOS 2 :
+
+In [3]: from polls.models import Choice, Question
+
+In [4]: q = Question.object.get(id=2)
+---------------------------------------------------------------------------
+AttributeError                            Traceback (most recent call last)
+Cell In[4], line 1
+----> 1 q = Question.object.get(id=2)
+
+AttributeError: type object 'Question' has no attribute 'object'
+
+In [5]: q = Question.objects.get(id=2)
+
+In [6]: q.get_choices()
+Out[6]: [('oui', 0, 0.0), ('beaucoup', 0, 0.0), ('pas du tout', 1, 1.0)]
+
+In [7]: q.age()
+Out[7]: datetime.timedelta(days=1, seconds=78344, microseconds=520628)
+
 

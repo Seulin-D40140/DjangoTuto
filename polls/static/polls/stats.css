@@ -1,0 +1,11 @@
+
+
+body {
+    color : white;
+    background: white url("images/background2.png") no-repeat center center fixed;
+    background-size: cover ;
+}
+
+h2 {
+color : pink;
+}

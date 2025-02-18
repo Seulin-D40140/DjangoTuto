@@ -1,0 +1,12 @@
+<h1>all</h1>
+
+
+{% if Question %}
+    <ul>
+    {% for question in Question %}
+        <li>id : {{question.id }} -> <a href="{% url 'polls:frequency' question.id %}">{{ question }} </a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No polls are available.</p>
+{% endif %}

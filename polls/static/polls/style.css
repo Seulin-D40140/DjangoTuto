@@ -1,0 +1,9 @@
+a {
+    color: Pink;
+    font-size : 22px;
+}
+
+body {
+    background: white url("images/background.jpg") no-repeat center center fixed;
+    background-size: cover ;
+}
