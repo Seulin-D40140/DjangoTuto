@@ -5,6 +5,9 @@ from django.db.models import Count
 from django.db.models import Sum
 from django.urls import reverse
 from django.views import generic
+from django.shortcuts import render, redirect
+from django.utils import timezone
+from django.contrib import messages
 
 from .models import Choice, Question
 
@@ -53,6 +56,44 @@ class StatsView(generic.ListView):
         context['total_choices'] = Question.objects.aggregate(total=Count('choice'))['total'] or 0
         context['total_votes'] = Choice.objects.aggregate(total=Sum('votes'))['total'] or 0
         return context
+
+class QuestionListView(generic.ListView):
+    """Affichage de la liste des questions"""
+    model = Question
+    template_name = "polls/index.html"
+    context_object_name = "questions"
+
+def ajouter_question(request):
+    """Gestion du formulaire d'ajout d'une question"""
+    if request.method == "POST":
+        question_texte = request.POST.get("question", "").strip()
+        choix1 = request.POST.get("choix1", "").strip()
+        choix2 = request.POST.get("choix2", "").strip()
+        choix3 = request.POST.get("choix3", "").strip()
+
+        # Vérifier que les champs obligatoires sont remplis
+        if not question_texte or not choix1 or not choix2:
+            messages.error(request, "La question et au moins deux choix sont obligatoires.")
+            return render(request, "polls/form.html")  # Retourner le formulaire avec un message d'erreur
+
+        # Création de la question
+        question = Question.objects.create(
+            question_text=question_texte,
+            pub_date=timezone.now()  # Ajout de la date et de l'heure actuelles
+        )
+
+        # Création des choix
+        Choice.objects.create(question=question, choice_text=choix1)
+        Choice.objects.create(question=question, choice_text=choix2)
+        if choix3:
+            Choice.objects.create(question=question, choice_text=choix3)
+
+        messages.success(request, "Question ajoutée avec succès !")
+        return redirect("polls:index")  # Rediriger vers la liste des questions
+
+    return render(request, "polls/form.html")  # Affichage du formulaire
+    # Affichage du formulaire
+
 
 
 def vote(request, question_id):

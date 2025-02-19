@@ -1,0 +1,31 @@
+{% load static %}
+
+<h1>Ajouter une question</h1>
+
+<form method="post">
+    {% csrf_token %}
+
+    <label for="question">Question :</label>
+    <input type="text" name="question" id="question" required>
+    <br>
+
+    <label for="choix1">Choix n°1 :</label>
+    <input type="text" name="choix1" id="choix1" required>
+    <br>
+
+    <label for="choix2">Choix n°2 :</label>
+    <input type="text" name="choix2" id="choix2" required>
+    <br>
+
+    <label for="choix3">Choix n°3 :</label>
+    <input type="text" name="choix3" id="choix3">
+    <br>
+
+    <button type="submit">Créer</button>
+</form>
+
+<a href="{% url 'polls:index' %}">Voir les questions</a>
+
+
+
+<link rel="stylesheet" href="{% static 'polls/style.css' %}">
