@@ -1,12 +1,23 @@
-<h1>all</h1>
+{% extends "base.html" %}
+{% load static %}
 
+{% block title %}Toutes les Questions{% endblock %}
 
-{% if Question %}
-    <ul>
-    {% for question in Question %}
-        <li>id : {{question.id }} -> <a href="{% url 'polls:frequency' question.id %}">{{ question }} </a></li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No polls are available.</p>
-{% endif %}
+{% block content %}
+    <h1>Liste de toutes les questions</h1>
+
+    {% if Question %}
+        <ul>
+        {% for question in Question %}
+            <li>id : {{ question.id }} -> <a href="{% url 'polls:frequency' question.id %}">{{ question }}</a></li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>Aucun sondage disponible.</p>
+    {% endif %}
+    <div class=" btn ">
+        <a href="{% url 'polls:index' %}">Retour à l'index</a>
+    </div>
+
+    <link rel="stylesheet" href="{% static 'polls/stats.css' %}">
+{% endblock %}

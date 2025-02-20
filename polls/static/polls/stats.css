@@ -6,6 +6,6 @@ body {
     background-size: cover ;
 }
 
-h2 {
-color : pink;
+.btn a {
+    color : Red;
 }

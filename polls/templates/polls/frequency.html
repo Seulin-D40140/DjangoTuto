@@ -1,9 +1,28 @@
-<h1>frequency</h1>
+{% extends "base.html" %}
+{% load static %}
 
-<h3>{{ Question.question_text }}</h3>
+{% block title %}Statistiques de Fréquence{% endblock %}
 
-<ul>
-    {% for get in Question.get_choices %}
-        <li>reponse : {{ get.0 }} /\ nombre de fois repondu : {{ get.1 }} /\ pourcentage ? : {{ get.2 }}</li>
-    {% endfor %}
-</ul>
+{% block content %}
+    {% if Question %}
+        <h1>Fréquence des Réponses</h1>
+
+        <h3>{{ Question.question_text }}</h3>
+
+        <ul>
+            {% for choice in Question.get_choices %}
+                <li>
+                    Réponse : {{ choice.0 }} / Nombre de fois répondu : {{ choice.1 }} / Pourcentage : {{ choice.2 }} %
+                </li>
+            {% endfor %}
+        </ul>
+        <div class=" btn ">
+            <a class="btn" href="{% url 'polls:index' %}">Retour à l'index</a>
+        </div>
+
+
+    {% else %}
+        <p>Aucune donnée de fréquence disponible.</p>
+    {% endif %}
+    <link rel="stylesheet" href="{% static 'polls/stats.css' %}">
+{% endblock %}

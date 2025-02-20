@@ -28,11 +28,18 @@ class Question(models.Model):
         return text[:max_length] + ('...' if len(text) > max_length
                                     else '')
 
+
+
     def get_choices(self):
         resultat = self.choice_set.aggregate(total=Sum('votes'))
-        total = resultat['total']
-        return [(c.choice_text, c.votes, c.votes / total)
-                for c in self.choice_set.all()]
+        total = resultat['total'] or 0  # Assure-toi que total n'est pas None
+
+        if total == 0:
+            # Si total est 0, attribue un pourcentage de 0 pour chaque choix
+            return [(c.choice_text, c.votes, 0) for c in self.choice_set.all()]
+
+        # Si total > 0, calcule le pourcentage normalement
+        return [(c.choice_text, c.votes, (c.votes / total) * 100) for c in self.choice_set.all()]
 
     def get_total_choices(cls):
         return cls.objects.aggregate(total=Count('choice'))['total'] or 0
