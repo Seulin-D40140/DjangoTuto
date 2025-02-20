@@ -3,7 +3,7 @@ from django.db.models import Sum
 from django.contrib import admin
 from django.db import models
 from django.utils import timezone
-
+from django import forms
 
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
@@ -27,8 +27,6 @@ class Question(models.Model):
     def text_excerpt(text, max_length):
         return text[:max_length] + ('...' if len(text) > max_length
                                     else '')
-
-
 
     def get_choices(self):
         resultat = self.choice_set.aggregate(total=Sum('votes'))

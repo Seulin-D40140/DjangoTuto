@@ -1,11 +1,33 @@
-<h1>result</h1>
+{% extends "base.html" %}
+{% load static %}
 
-<h3>{{ question.question_text }}</h3>
+{% block title %}Résultats{% endblock %}
 
-<ul>
-{% for choice in question.choice_set.all %}
-    <li>{{ choice.choice_text }} -- {{ choice.votes }} vote{{ choice.votes|pluralize }}</li>
-{% endfor %}
-</ul>
+{% block content %}
+    {% if question %}
+        <h1>Résultats</h1>
 
-<a href="{% url 'polls:detail' question.id %}">Vote again?</a>
+        <h3>{{ question.question_text }}</h3>
+
+        <ul>
+            {% for choice in question.choice_set.all %}
+                <li>
+                    Réponse : {{ choice.choice_text }} / Nombre de fois répondu : {{ choice.votes }} /
+                    {{ choice.votes|pluralize }}
+                </li>
+            {% endfor %}
+        </ul>
+
+        <a href="{% url 'polls:detail' question.id %}">Voter à nouveau ?</a>
+        <br>
+
+        <div class="btn">
+            <a class="btn" href="{% url 'polls:index' %}">Retour à l'index</a>
+        </div>
+
+    {% else %}
+        <p>Aucune question trouvée.</p>
+    {% endif %}
+
+    <link rel="stylesheet" href="{% static 'polls/stats.css' %}">
+{% endblock %}

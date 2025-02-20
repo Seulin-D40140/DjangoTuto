@@ -8,6 +8,7 @@ from django.views import generic
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.contrib import messages
+from .form import QuestionModelForm
 
 from .models import Choice, Question
 
@@ -20,12 +21,9 @@ class IndexView(generic.ListView):
         """Return the last five published questions."""
         return Question.objects.order_by("-pub_date")[:5]
 
-
-
 class DetailView(generic.DetailView):
     model = Question
     template_name = "polls/detail.html"
-
 
 class ResultsView(generic.DetailView):
     model = Question
@@ -63,36 +61,46 @@ class QuestionListView(generic.ListView):
     template_name = "polls/index.html"
     context_object_name = "questions"
 
+
 def ajouter_question(request):
-    """Gestion du formulaire d'ajout d'une question"""
+    """Gestion du formulaire d'ajout d'une question avec jusqu'à 5 choix"""
     if request.method == "POST":
-        question_texte = request.POST.get("question", "").strip()
-        choix1 = request.POST.get("choix1", "").strip()
-        choix2 = request.POST.get("choix2", "").strip()
-        choix3 = request.POST.get("choix3", "").strip()
+        form = QuestionModelForm(request.POST)
 
-        # Vérifier que les champs obligatoires sont remplis
-        if not question_texte or not choix1 or not choix2:
-            messages.error(request, "La question et au moins deux choix sont obligatoires.")
-            return render(request, "polls/form.html")  # Retourner le formulaire avec un message d'erreur
+        # Vérifier si le formulaire est valide
+        if form.is_valid():
+            # Créer la question
+            question = form.save(commit=False)
+            question.pub_date = timezone.now()
+            question.save()
 
-        # Création de la question
-        question = Question.objects.create(
-            question_text=question_texte,
-            pub_date=timezone.now()  # Ajout de la date et de l'heure actuelles
-        )
+            # Récupérer les choix et les enregistrer
+            choix1 = form.cleaned_data.get('choix1')
+            choix2 = form.cleaned_data.get('choix2')
+            choix3 = form.cleaned_data.get('choix3')
+            choix4 = form.cleaned_data.get('choix4')
+            choix5 = form.cleaned_data.get('choix5')
 
-        # Création des choix
-        Choice.objects.create(question=question, choice_text=choix1)
-        Choice.objects.create(question=question, choice_text=choix2)
-        if choix3:
-            Choice.objects.create(question=question, choice_text=choix3)
+            # Enregistrer les choix associés à la question
+            Choice.objects.create(question=question, choice_text=choix1)
+            Choice.objects.create(question=question, choice_text=choix2)
+            if choix3:
+                Choice.objects.create(question=question, choice_text=choix3)
+            if choix4:
+                Choice.objects.create(question=question, choice_text=choix4)
+            if choix5:
+                Choice.objects.create(question=question, choice_text=choix5)
 
-        messages.success(request, "Question ajoutée avec succès !")
-        return redirect("polls:index")  # Rediriger vers la liste des questions
+            messages.success(request, "Question et choix ajoutés avec succès !")
+            return redirect("polls:index")
+        else:
+            messages.error(request, "Veuillez remplir tous les champs requis.")
 
-    return render(request, "polls/form.html")  # Affichage du formulaire
-    # Affichage du formulaire
+    else:
+        form = QuestionModelForm()
+
+    return render(request, "polls/form.html", {"form": form})
+
 
 
 
