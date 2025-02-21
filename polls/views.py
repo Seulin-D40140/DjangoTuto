@@ -9,9 +9,11 @@ from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.contrib import messages
 from .form import QuestionModelForm
-
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import logout
 from .models import Choice, Question
-
+from django.contrib.auth.decorators import login_required
 
 class IndexView(generic.ListView):
     template_name = "polls/index.html"
@@ -21,11 +23,20 @@ class IndexView(generic.ListView):
         """Return the last five published questions."""
         return Question.objects.order_by("-pub_date")[:5]
 
-class DetailView(generic.DetailView):
+
+def LoginView(request):
+    username = request.POST["username"]
+    password = request.POST["password"]
+    user = authenticate(request, username=username, password=password)
+    if user is not None:
+        login(request, user)
+        redirect("polls:index")
+
+class DetailView( generic.DetailView):
     model = Question
     template_name = "polls/detail.html"
 
-class ResultsView(generic.DetailView):
+class ResultsView( generic.DetailView):
     model = Question
     template_name = "polls/results.html"
 
@@ -55,13 +66,13 @@ class StatsView(generic.ListView):
         context['total_votes'] = Choice.objects.aggregate(total=Sum('votes'))['total'] or 0
         return context
 
-class QuestionListView(generic.ListView):
+class QuestionListView( generic.ListView):
     """Affichage de la liste des questions"""
     model = Question
     template_name = "polls/index.html"
     context_object_name = "questions"
 
-
+@login_required
 def ajouter_question(request):
     """Gestion du formulaire d'ajout d'une question avec jusqu'à 5 choix"""
     if request.method == "POST":
@@ -103,9 +114,9 @@ def ajouter_question(request):
 
 
 
-
 def vote(request, question_id):
     return HttpResponse("You're voting on question %s." % question_id)
+
 
 def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)

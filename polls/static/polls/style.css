@@ -11,3 +11,22 @@ body {
 .btn a {
     color : Red;
 }
+
+.btnDecoReco{
+    display : flex;
+    right : 10px
+}
+
+.header{
+    margin : 20px;
+    display : flex;
+    justify-content : space-between;
+}
+
+.btnadmin{
+    margin-left : 10px
+}
+
+.nameuser{
+    color : white;
+}

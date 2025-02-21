@@ -8,8 +8,22 @@
     <title>{% block title %}Mon Site{% endblock %}</title>
 </head>
 <body>
-    <header>
+    <header class="header">
         <h1>My Site Test Django</h1>
+        {{username}}
+        <div class="btnDecoReco">
+            {% if user.is_authenticated %}
+                <div class="btnadmin">
+                    <div class="nameuser"> bonjour : {{user.username}} !</div>
+                    <a href="{% url 'logout' %}"> ✅ DéConnection ==> 🔴</a>
+                </div>
+            {% else %}
+                <div class="btnadmin">
+                    <div class="nameuser"> bonjour !  </div>
+                    <a href="{% url 'login' %}"> 🔴 Connection ==> ✅ </a>
+                </div>
+            {% endif %}
+        </div>
     </header>
 
     <main>

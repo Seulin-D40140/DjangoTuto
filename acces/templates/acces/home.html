@@ -1,0 +1,11 @@
+{% extends "base.html" %}  {# Hérite d'un template général, modifiez si besoin #}
+
+{% block content %}
+<h2>🔥 Bienvenue sur le site des sondages 🔥 </h2>
+
+<p>Veuillez vous connecter ou accéder en tant qu'invité.</p>
+
+<a href="{% url 'login' %}">🔑 Se connecter ✅ </a> |
+<a href="{% url 'polls:index' %}">🏠 Accéder en tant qu'invité</a>
+
+{% endblock %}
